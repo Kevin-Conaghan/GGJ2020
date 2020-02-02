@@ -6,6 +6,8 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class ButtonMasher : MonoBehaviour
 {
+    private HammerAnimation hammerAnimation;
+
     public int health=1000;
     public int decrease_rate = 5;
     private StatusScript localStatus;
@@ -19,6 +21,7 @@ public class ButtonMasher : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        hammerAnimation = GameObject.Find("Hammer").GetComponent<HammerAnimation>();
         health = 0;
         localStatus = GetComponent<StatusScript>();
         this.GetComponentInChildren<Light>().color = GetComponentInParent<GameState>().workingColor;
@@ -63,6 +66,7 @@ public class ButtonMasher : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.E ))
                 {
                     IncreaseHealthTick();
+                    hammerAnimation.StartAnimation();
                 }
                 else
                 { 
@@ -71,6 +75,7 @@ public class ButtonMasher : MonoBehaviour
             
                 if(health > 1001)
                 {
+                    hammerAnimation.StopAnimation();
                     progressSlider.SetActive(false);
                     this.GetComponentInParent<MeshRenderer>().material.mainTexture = localStatus.workingTexture;
 
