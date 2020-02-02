@@ -7602,6 +7602,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MiniGame2
       objectReference: {fileID: 0}
+    - target: {fileID: 3348754117602424499, guid: 2df82e5a1ac118749ba31d9d1639b436,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3348754117602424501, guid: 2df82e5a1ac118749ba31d9d1639b436,
         type: 3}
       propertyPath: m_LocalPosition.x
