@@ -6,7 +6,7 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class ButtonMasher : MonoBehaviour
 {
-    public int health=1000;
+    public int health = 1000;
     public int decrease_rate = 5;
     private StatusScript localStatus;
 
@@ -15,7 +15,10 @@ public class ButtonMasher : MonoBehaviour
 
     public GameObject progressSlider;
     public GameObject player;
-    
+
+    public GameObject UIObject;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -117,14 +120,31 @@ public class ButtonMasher : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Entering Generator Collider");
         health = 0;
         progressSlider.SetActive(true);
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerStay(Collider other)
     {
 
+        if (!localStatus.working)
+        {
+            UIObject.GetComponentInChildren<Text>().text = "Mash 'E' to repair the generator";
+        }
+
+        if (localStatus.working)
+        {
+            UIObject.GetComponentInChildren<Text>().text = "";
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
         progressSlider.SetActive(false);
+
+        Debug.Log("Leaving Generator Collider");
+        UIObject.GetComponentInChildren<Text>().text = "";
     }
 
 }

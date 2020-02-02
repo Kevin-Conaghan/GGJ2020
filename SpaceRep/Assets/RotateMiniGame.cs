@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class RotateMiniGame : MonoBehaviour
 {
@@ -14,10 +15,19 @@ public class RotateMiniGame : MonoBehaviour
     public Material correctCornerMat;
     public Material cornerMat;
     private float[] rndNumber = { 0.0f, 90.0f, 180.0f, 270.0f};
+    public bool solved = false;
+    public int currentPuzzle;
+    public GameObject fuseWrapperObject;
+    public GameObject playerMovementObject;
 
     // Start is called before the first frame update
     void Start()
     {
+        // Status script for checking if the generator is broken
+        fuseWrapperObject.GetComponentInChildren<Light>().color = fuseWrapperObject.GetComponentInParent<GameState>().workingColor;
+        playerMovementObject = GameObject.FindGameObjectWithTag("Player");
+
+        //Degrees
         rndNumber = new float[4];
         rndNumber[0] = 0.0f;
         rndNumber[1] = 90.0f;
@@ -58,111 +68,248 @@ public class RotateMiniGame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            RandomiseRotations();
-        }
+        MovementSelectionLogic();
+        playerMovementObject.GetComponent<FirstPersonController>().m_MoveDir = new Vector3(0.0f, 0.0f, 0.0f);
 
-    if (Input.GetKeyDown(KeyCode.LeftArrow))
-    {
-        currentSelection += 1;
-        ChangeLast();
-        ChangeCurrent();
-        lastSelection = currentSelection;
-    }
-    else if (Input.GetKeyDown(KeyCode.RightArrow))
-    {
-        currentSelection -= 1;
-        ChangeLast();
-        ChangeCurrent();
-        lastSelection = currentSelection;
-    }
-    else if (Input.GetKeyDown(KeyCode.UpArrow))
-    {
-        currentSelection += 5;
-        ChangeLast();
-        ChangeCurrent();
-        lastSelection = currentSelection;
-    }
-    else if (Input.GetKeyDown(KeyCode.DownArrow))
-    {
-        currentSelection -= 5;
-        ChangeLast();
-        ChangeCurrent();
-        lastSelection = currentSelection;
-    }
-    if(currentSelection <= 0)
-    {
-        currentSelection = 0;
-    }
-    else if(currentSelection >=  24)
-    {
-        currentSelection = 24;
-    }
-    
-    //Debug.Log(currentSelection);
-           
-    if(Input.GetKeyDown(KeyCode.E))
-    {
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
             zRotation += 90; //(int)((cubes[currentSelection].transform.localRotation.x * Mathf.Rad2Deg) + 90.0f);
             cubes[currentSelection].transform.localRotation = Quaternion.Euler(0.0f, 90.0f, zRotation);
             Debug.Log(cubes[currentSelection].transform.localEulerAngles.z);
-            PipeLogic2();
+
+            if(currentPuzzle ==0)
+            {
+                PipeLogic2();
+            }
+            else if(currentPuzzle == 1)
+            {
+                PipeLogic2();
+            }
+        }
     }
+
+    public void StartPuzzle(int puzzleNumber)
+    {
+        Debug.Log("Starting Puzzle"); 
+        RandomiseRotations();
+        currentPuzzle = puzzleNumber;
+    }
+
+    private void MovementSelectionLogic()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            currentSelection += 1;
+            ChangeLast();
+            ChangeCurrent();
+            lastSelection = currentSelection;
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            currentSelection -= 1;
+            ChangeLast();
+            ChangeCurrent();
+            lastSelection = currentSelection;
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            currentSelection += 5;
+            ChangeLast();
+            ChangeCurrent();
+            lastSelection = currentSelection;
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            currentSelection -= 5;
+            ChangeLast();
+            ChangeCurrent();
+            lastSelection = currentSelection;
+        }
+        if (currentSelection <= 0)
+        {
+            currentSelection = 0;
+        }
+        else if (currentSelection >= 24)
+        {
+            currentSelection = 24;
+        }
+
+        //Debug.Log(currentSelection);
+        
     }
     private void ChangeLast()
     {
-
         cubes[lastSelection].color = Color.white;
-
     }
+
     private void ChangeCurrent()
     {
         cubes[currentSelection].color = Color.red;
-
     }
+
     private void PipeLogic1()
     {
-        if(
-             cubes[2].transform.localRotation.z == 0.0f
-             && cubes[3].transform.localRotation.z == -0.5f
-             && cubes[4].transform.localRotation.z == 0.0f
-             && cubes[7].transform.localRotation.z == 0.5f //
-             && cubes[8].transform.localRotation.z == 0.5f
-             && cubes[9].transform.localRotation.z == 0.5f
-             && cubes[12].transform.localRotation.z == 0.5f
-             && cubes[13].transform.localRotation.z == 0.5f
-             && cubes[14].transform.localRotation.z == 0.7071068f
-             && cubes[15].transform.localRotation.z == 0.0f
-             && cubes[16].transform.localRotation.z == -0.5f
-             && cubes[17].transform.localRotation.z == 0.5f
-             && cubes[18].transform.localRotation.z == -0.5f
-             && cubes[20].transform.localRotation.z == 0.7071068f
-             && cubes[21].transform.localRotation.z == 0.5f
-             && cubes[22].transform.localRotation.z == 0.0f
-             && cubes[23].transform.localRotation.z == 0.7071068f)
+        if (cubes[2].transform.localEulerAngles.z > -1.0f && cubes[2].transform.localEulerAngles.z < 1.0f)
         {
-            Debug.Log("congrats");
-        } 
+            cubes[2].material = correctCornerMat;
+        }
+        else
+        {
+            cubes[2].material = cornerMat;
+        }
+        if (cubes[3].transform.localEulerAngles.z < 271.0f && cubes[3].transform.localEulerAngles.z > 269.0f)
+        {
+            cubes[3].material = correctCornerMat;
+        }
+        else
+        {
+            cubes[3].material = cornerMat;
+        }
+        if (cubes[4].transform.localEulerAngles.z > -1.0f && cubes[4].transform.localEulerAngles.z < 1.0f)
+        {
+            cubes[4].material = correctCornerMat;
+        }
+        else
+        {
+            cubes[4].material = cornerMat;
+        }
+        if (cubes[7].transform.localEulerAngles.z > 89.0f && cubes[7].transform.localEulerAngles.z < 91.0f || cubes[7].transform.localEulerAngles.z > 269 && cubes[7].transform.localEulerAngles.z < 271.0f)
+        {
+            cubes[7].material = correctStraightMat;
+        }
+        else
+        {
+            cubes[7].material = straightMat;
+        }
+        if (cubes[8].transform.localEulerAngles.z > 89.0f && cubes[8].transform.localEulerAngles.z < 91.0f || cubes[8].transform.localEulerAngles.z > 269 && cubes[8].transform.localEulerAngles.z < 271.0f)
+        {
+            cubes[8].material = correctStraightMat;
+        }
+        else
+        {
+            cubes[8].material = straightMat;
+        }
+        if (cubes[9].transform.localEulerAngles.z > 89.0f && cubes[9].transform.localEulerAngles.z < 91.0f || cubes[9].transform.localEulerAngles.z > 269 && cubes[9].transform.localEulerAngles.z < 271.0f)
+        {
+            cubes[9].material = correctStraightMat;
+        }
+        else
+        {
+            cubes[9].material = straightMat;
+        }
+        if (cubes[12].transform.localEulerAngles.z > 89.0f && cubes[12].transform.localEulerAngles.z < 91.0f || cubes[12].transform.localEulerAngles.z > 269 && cubes[12].transform.localEulerAngles.z < 271.0f)
+        {
+            cubes[12].material = correctStraightMat;
+        }
+        else
+        {
+            cubes[12].material = straightMat;
+        }
+        if (cubes[13].transform.localEulerAngles.z > 89.0f && cubes[13].transform.localEulerAngles.z < 91.0f)
+        {
+            cubes[13].material = correctCornerMat;
+        }
+        else
+        {
+            cubes[13].material = cornerMat;
+        }
+        if (cubes[14].transform.localEulerAngles.z > 179.0f && cubes[14].transform.localEulerAngles.z < 181.0f)
+        {
+            cubes[14].material = correctCornerMat;
+        }
+        else
+        {
+            cubes[14].material = cornerMat;
+        }
+        if (cubes[15].transform.localEulerAngles.z > -1.0f && cubes[15].transform.localEulerAngles.z < 1.0f)
+        {
+            cubes[15].material = correctCornerMat;
+        }
+        else
+        {
+            cubes[15].material = cornerMat;
+        }
+        if (cubes[16].transform.localEulerAngles.z < 271.0f && cubes[16].transform.localEulerAngles.z > 269.0f)
+        {
+            cubes[16].material = correctCornerMat;
+        }
+        else
+        {
+            cubes[16].material = cornerMat;
+        }
+        if (cubes[17].transform.localEulerAngles.z > 89.0f && cubes[17].transform.localEulerAngles.z < 91.0f)
+        {
+            cubes[17].material = correctCornerMat;
+        }
+        else
+        {
+            cubes[17].material = cornerMat;
+        }
+        if (cubes[18].transform.localEulerAngles.z < 271.0f && cubes[18].transform.localEulerAngles.z > 269.0f)
+        {
+            cubes[18].material = correctCornerMat;
+        }
+        else
+        {
+            cubes[18].material = cornerMat;
+        }
+        if (cubes[20].transform.localEulerAngles.z > 179.0f && cubes[20].transform.localEulerAngles.z < 181.0f)
+        {
+            cubes[20].material = correctCornerMat;
+        }
+        else
+        {
+            cubes[20].material = cornerMat;
+        }
+        if (cubes[21].transform.localEulerAngles.z > 89.0f && cubes[21].transform.localEulerAngles.z < 91.0f)
+        {
+            cubes[21].material = correctCornerMat;
+        }
+        else
+        {
+            cubes[21].material = cornerMat;
+        }
+        if (cubes[22].transform.localEulerAngles.z > -1.0f && cubes[22].transform.localEulerAngles.z < 1.0f)
+        {
+            cubes[22].material = correctStraightMat;
+        }
+        else
+        {
+            cubes[22].material = straightMat;
+        }
+        if (cubes[23].transform.localEulerAngles.z > 179.0f && cubes[23].transform.localEulerAngles.z < 181.0f)
+        {
+            cubes[23].material = correctCornerMat;
+        }
+        else
+        {
+            cubes[23].material = cornerMat;
+        }
+        if (cubes[2].material == correctCornerMat
+           && cubes[3].material == correctCornerMat
+           && cubes[4].material == correctCornerMat
+           && cubes[7].material == correctStraightMat
+           && cubes[8].material == correctStraightMat
+           && cubes[9].material == correctStraightMat
+           && cubes[12].material == correctStraightMat
+           && cubes[13].material == correctCornerMat
+           && cubes[14].material == correctCornerMat
+           && cubes[15].material == correctCornerMat
+           && cubes[16].material == correctCornerMat
+           && cubes[17].material == correctCornerMat
+           && cubes[18].material == correctCornerMat
+           && cubes[20].material == correctCornerMat
+           && cubes[21].material == correctCornerMat
+           && cubes[22].material == correctStraightMat
+           && cubes[23].material == correctCornerMat)
+        {
+            solved = true;
+        }
     }
+
     private void PipeLogic2()
     {
-        //if (
-        //     (cubes[4].transform.localRotation.z == 0.5f || cubes[4].transform.localRotation.z == -0.5f)
-        //     && (cubes[7].transform.localRotation.z == 0.5f || cubes[7].transform.localRotation.z == -0.5f)
-        //     && (cubes[8].transform.localRotation.z == -0.7071068f || cubes[8].transform.localRotation.z == 0.7071068f)
-        //     && (cubes[9].transform.localRotation.z == -0.7071068f || cubes[9].transform.localRotation.z == 0.7071068f)
-        //     && cubes[10].transform.localRotation.z == 0.0f //
-        //     && (cubes[11].transform.localRotation.z == 0.5f || cubes[11].transform.localRotation.z == -0.5f)
-        //     && (cubes[12].transform.localRotation.z == 0.5f || cubes[12].transform.localRotation.z == -0.5f)
-        //     && (cubes[15].transform.localRotation.z == 0.5f || cubes[15].transform.localRotation.z == -0.5f)
-        //     && (cubes[16].transform.localRotation.z == 0.5f || cubes[16].transform.localRotation.z == -0.5f)
-        //     && (cubes[17].transform.localRotation.z == 0.5f || cubes[17].transform.localRotation.z == -0.5f)
-        //     && (cubes[20].transform.localRotation.z == 0.5f || cubes[20].transform.localRotation.z == -0.5f)
-        //     && (cubes[21].transform.localRotation.z == 0.5f || cubes[21].transform.localRotation.z == -0.5f)
-        //     && (cubes[22].transform.localRotation.z == -0.7071068f || cubes[22].transform.localRotation.z == 0.7071068f))
-        //{
-        //    Debug.Log("congrats");
         if (cubes[4].transform.localEulerAngles.z > 89.0f && cubes[4].transform.localEulerAngles.z < 91.0f || cubes[4].transform.localEulerAngles.z > 269 && cubes[4].transform.localEulerAngles.z < 271.0f)
         {
             cubes[4].material = correctStraightMat;
@@ -281,7 +428,7 @@ public class RotateMiniGame : MonoBehaviour
             && cubes[21].material == correctCornerMat
             && cubes[22].material == correctCornerMat)
         {
-            Debug.Log("Winner");
+            solved = true;
         }
     }
 
@@ -291,5 +438,6 @@ public class RotateMiniGame : MonoBehaviour
         {
             cubes[i].transform.localRotation = Quaternion.Euler(0.0f, 90.0f, rndNumber[Random.Range(0, 3)]);
         }
+        PipeLogic2();
     }
 }

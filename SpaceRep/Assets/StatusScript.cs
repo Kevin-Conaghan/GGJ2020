@@ -10,7 +10,6 @@ public class StatusScript : MonoBehaviour
     public Texture workingTexture;
     public Texture brokenTexture;
     public bool inRange = false;
-    public GameObject UIObject;
 
     //Broken model and texture
     //Working model and texture
@@ -29,22 +28,12 @@ public class StatusScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Entering Generator Collider");
         inRange = true;
 
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (!working)
-        {
-            UIObject.GetComponentInChildren<Text>().text = "Mash 'E' to repair the generator";
-        }
-
-        if(working)
-        {
-            UIObject.GetComponentInChildren<Text>().text = "";
-        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -54,8 +43,6 @@ public class StatusScript : MonoBehaviour
         {
             invinsible = false;
         }
-
-        Debug.Log("Leaving Generator Collider");
-        UIObject.GetComponentInChildren<Text>().text = "";
+        
     }
 }

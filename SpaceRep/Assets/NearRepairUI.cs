@@ -24,22 +24,16 @@ public class NearRepairUI : MonoBehaviour
     {
         for(int i = 0; i < breakables.Length; i++)
         {
-            
             localStatusScript = breakables[i].GetComponent<StatusScript>();
             if (localStatusScript.working && !localStatusScript.invinsible)
             {
                 rndNumber = generateRandomNumber();
-                if (rndNumber > 995f)
+// Debug.Log(rndNumber);
+                if (rndNumber > 200f)
                 {
-                    switch (breakables[i].name)
-                    {
-                        case "Generator":
-                            breakables[i].GetComponent<StatusScript>().working = false;
-                            breakables[i].GetComponent<MeshRenderer>().material.mainTexture = breakables[i].GetComponent<StatusScript>().brokenTexture;
-                            break;
-
-                    }
-                    breakables[i].GetComponent<StatusScript>();
+                  
+                    breakables[i].GetComponent<StatusScript>().working = false;
+                    breakables[i].GetComponent<MeshRenderer>().material.mainTexture = breakables[i].GetComponent<StatusScript>().brokenTexture;
                 }
                 rndNumber = 0;
             }
