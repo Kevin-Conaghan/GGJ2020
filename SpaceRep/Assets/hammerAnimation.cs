@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class hammerAnimation : MonoBehaviour
+public class HammerAnimation : MonoBehaviour
 {
     public Animator anim;
     // Start is called before the first frame update
@@ -28,8 +28,8 @@ public class hammerAnimation : MonoBehaviour
         if (null != anim)
         {
             // play Bounce but start at a quarter of the way though
-            anim.Play("HammerAnimation");
-            //anim.enabled = true;
+            anim.Play("HammerAnimation",-1,0f);
+            anim.enabled = true;
         }
     }
     public void StopAnimation()
@@ -40,4 +40,10 @@ public class hammerAnimation : MonoBehaviour
             anim.enabled = false;
         }
     }
+
+    public Animator GetAnimator()
+    {
+        return anim;
+    }
+
 }

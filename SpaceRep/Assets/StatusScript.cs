@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class StatusScript : MonoBehaviour
 {
+    private HammerAnimation hammerAnimation;
     public bool working = true;
     public bool invinsible = false;
     public Texture workingTexture;
@@ -17,6 +18,7 @@ public class StatusScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        hammerAnimation = GameObject.Find("Hammer").GetComponent<HammerAnimation>();
         working = true;
         invinsible = false;
         inRange = false;
@@ -44,11 +46,16 @@ public class StatusScript : MonoBehaviour
         if(working)
         {
             UIObject.GetComponentInChildren<Text>().text = "";
+            hammerAnimation.StopAnimation();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
+        if (GetAnimator().enabled==true)
+        {
+            hammerAnimation.StopAnimation();
+        }
         inRange = false;
         if (working && invinsible)
         {
