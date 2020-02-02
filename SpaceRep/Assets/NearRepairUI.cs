@@ -29,17 +29,10 @@ public class NearRepairUI : MonoBehaviour
             if (localStatusScript.working && !localStatusScript.invinsible)
             {
                 rndNumber = generateRandomNumber();
-                if (rndNumber > 995f)
+                if (rndNumber > 998f)
                 {
-                    switch (breakables[i].name)
-                    {
-                        case "Generator":
                             breakables[i].GetComponent<StatusScript>().working = false;
                             breakables[i].GetComponent<MeshRenderer>().material.mainTexture = breakables[i].GetComponent<StatusScript>().brokenTexture;
-                            break;
-
-                    }
-                    breakables[i].GetComponent<StatusScript>();
                 }
                 rndNumber = 0;
             }

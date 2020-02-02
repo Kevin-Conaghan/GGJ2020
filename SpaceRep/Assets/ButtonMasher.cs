@@ -7,12 +7,13 @@ using UnityStandardAssets.Characters.FirstPerson;
 public class ButtonMasher : MonoBehaviour
 {
     public int health=1000;
-    public int decrease_rate = 5;
+    public int decrease_rate = 2;
     private StatusScript localStatus;
 
     public float properGravity = -9.8f;
     public float reducedGravity = -7.0f;
-
+    private AudioSource m_audioSource;
+    public AudioClip clunkSound;
     public GameObject progressSlider;
     public GameObject player;
     
@@ -22,13 +23,13 @@ public class ButtonMasher : MonoBehaviour
         health = 0;
         localStatus = GetComponent<StatusScript>();
         this.GetComponentInChildren<Light>().color = GetComponentInParent<GameState>().workingColor;
+        m_audioSource = this.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        progressSlider.GetComponent<Slider>().value = (health / 1000.0f);
 
         if (!localStatus.working)
         {
@@ -60,8 +61,13 @@ public class ButtonMasher : MonoBehaviour
 
             if (localStatus.inRange && GameObject.FindGameObjectWithTag("MainCamera").GetComponent<cameraRaycast>().lookingAtBreakable)
             {
+                 progressSlider.GetComponent<Slider>().value = (health / 1000.0f);
                 if (Input.GetKeyDown(KeyCode.E ))
                 {
+                     int rnd = Random.Range(0, 10);
+                    rnd = rnd /10;
+                    m_audioSource.pitch = rnd;
+                    m_audioSource.PlayOneShot(clunkSound);
                     IncreaseHealthTick();
                 }
                 else
@@ -112,7 +118,7 @@ public class ButtonMasher : MonoBehaviour
 
     void IncreaseHealthTick()
     {
-        health = health + (decrease_rate * 30);
+        health = health + (decrease_rate * 100);
     }
 
     private void OnTriggerEnter(Collider other)

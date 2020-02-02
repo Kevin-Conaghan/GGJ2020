@@ -1,51 +1,57 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityStandardAssets.Characters.FirstPerson;
+using UnityEngine.SceneManagement;
 
 public class GameState : MonoBehaviour
 {
-    public int shipHealth = 1000;
+    public GameObject blackimage;
+    public float shipHealth = 1000;
     public bool playing = true;
     public GameObject[] repairables;
     public GameObject playerObject;
     public GameObject[] lights;
     public bool antiGravity = false;
+    public int multiplier = 10;
 
     public Color workingColor;
     public Color brokenColor;
     public Color panicColor;
 
+    public Slider health;
 
 
     // Start is called before the first frame update
 
     void Start()
-        {
+    {
         antiGravity = false;
-           //for(int i = 0; i < this.transform.childCount; i++)
-           // {
-           //     if(this.transform.GetChild(i).tag == "BrokenObject")
-           //     {
-           //         repairables[i] = this.transform.GetChild(i).gameObject;
-           //     }
-           // }
     }
 
     // Update is called once per frame
     void Update()
     {
 
-     
+        if(shipHealth == 0)
+        {
+            SceneManager.LoadScene("GameOver",LoadSceneMode.Single);
+            //blackimage.SetActive(true);
+        }
+        
+        health.value = (shipHealth / 1000.0f);
+
+
         for (int i = 0; i < repairables.Length; i++)
         {
             if (repairables[i].GetComponent<StatusScript>().working)
             {
-                shipHealth++;
+                shipHealth += Time.deltaTime * multiplier;
             }
             else
             {
-                shipHealth--;
+                shipHealth -= Time.deltaTime * multiplier;
             }
         }
 

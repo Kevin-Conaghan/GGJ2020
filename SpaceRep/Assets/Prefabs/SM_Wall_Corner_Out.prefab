@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4715212095231860747}
   - component: {fileID: 4338315353183787581}
   - component: {fileID: 8000719226764486340}
+  - component: {fileID: -4367232394871136814}
   m_Layer: 0
   m_Name: SM_Wall_Corner_Out
   m_TagString: Untagged
@@ -78,3 +79,16 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &-4367232394871136814
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8589654989486248472}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9999844, y: 0.99999076, z: 2.0000005}
+  m_Center: {x: -0.18285179, y: -0.18285187, z: 0}

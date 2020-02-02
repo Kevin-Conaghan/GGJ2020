@@ -7,10 +7,12 @@ public class AudioManager : MonoBehaviour
     private GameState m_gameState;
     public AudioClip[] calmDialogue;
     public AudioClip[] panicDialogue;
-    private AudioSource m_audioSource;
-    private int m_shipHealth;
+    public AudioSource m_audioSource;
+    private float m_shipHealth;
+    private int lastNum;
     private bool m_isPlaying;
 
+    public GameObject gameState;
     private float m_triggerTimer;
 
 
@@ -18,27 +20,47 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         m_audioSource = this.GetComponent<AudioSource>();
-        m_gameState = this.GetComponent<GameState>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        m_shipHealth = m_gameState.shipHealth;
         m_triggerTimer += Time.deltaTime;
+        float shipHealth = gameState.GetComponent<GameState>().shipHealth;
 
-        //panic stations
-        if (m_shipHealth < 500)
+        if (shipHealth < 500)
         {
+            //panic stations
+            if (m_triggerTimer > 20.0f && m_audioSource.isPlaying == false)
+            {
+                int random = Random.Range(0, 5);
+
+                if(random!= lastNum)
+                {
+                    m_audioSource.PlayOneShot(panicDialogue[random]);
+                    // m_audioSource.PlayOneShot(calmDialogue[random]);
+
+                    m_triggerTimer = 0;
+                }
+                lastNum = random;
+            } 
         }
+        else
+        {
+            //panic stations
+            if (m_triggerTimer > 20.0f && m_audioSource.isPlaying == false)
+            {
+           
+                int random = Random.Range(0, 11);
+                if(random != lastNum)
+                {
+                    //  m_audioSource.PlayOneShot(panicDialogue[random]);
+                    m_audioSource.PlayOneShot(calmDialogue[random]);
 
-
-
+                    m_triggerTimer = 0;
+                }
+                lastNum = random;
+            }
+        }
     }
-
-
-
-
-
-
 }
